@@ -18,34 +18,23 @@ void Graph::DFS_node(int node, std::vector<bool> &vertices_visited)
 std::set<int> Graph::findRootNodes()
 {
   std::set<int> result;
-  std::vector<bool> vertices(v_.size(), false);
-  bool flag = true;
-
   if (v_.empty())
     return result;
 
-  int root;
-  for (unsigned i = 0; i < v_.size(); i++)
+  std::vector<int> indegree(v_.size(), 0);
+
+  for (auto it = v_.begin(); it != v_.end(); it++)
   {
-    if (vertices[i] == false)
+    for (auto &n : it->second)
     {
-      DFS_node(i, vertices);
-      root = i;
+      indegree[n]++;
     }
   }
 
-  fill(vertices.begin(), vertices.end(), false);
-  DFS_node(root, vertices);
-  for (unsigned int i = 0; i < v_.size(); i++)
-  {
-    if (vertices[i] == false)
-    {
-      flag = false;
-      break;
-    }
+  for (unsigned int i = 0; i < indegree.size(); i++) {
+    if (indegree[i] == 0)
+      result.insert(i);
   }
-  if (flag == true)
-    result.insert(root);
 
   return result;
 }
